@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Blog
 from .models import Category
+from django.db.models import Q
 
 # Create your views here.
 def posts_by_category(request, category_id):
@@ -31,14 +32,12 @@ def blogs(request, slug):
     return render(request, 'blogs.html', context)
 
 def search(request):
-    keyword = request.GET.get('keyword')
-    # if keyword:
-    #     posts = Blog.objects.filter(status='Published', title__icontains=keyword)
-    # else:
-    #     posts = Blog.objects.filter(status='Published')
-    
-    # context = {
-    #     'posts': posts,
-    #     'keyword': keyword
-    # }
-    return render(request, 'search.html')
+    keyword = request.GET.get('keyword', '')
+
+    blogs = Blog.objects.filter(Q(title__icontains=keyword) | Q(short_description__icontains=keyword) | Q(blog_body__icontains=keyword), status='Published').order_by('-updatedAt')
+
+    context = {
+        'blogs': blogs,
+        'keyword': keyword,
+    }
+    return render(request, 'search.html', context)
