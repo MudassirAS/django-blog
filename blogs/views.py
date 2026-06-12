@@ -29,3 +29,16 @@ def blogs(request, slug):
         'blog': single_blog
     }
     return render(request, 'blogs.html', context)
+
+def search(request):
+    keyword = request.GET.get('keyword')
+    # if keyword:
+    #     posts = Blog.objects.filter(status='Published', title__icontains=keyword)
+    # else:
+    #     posts = Blog.objects.filter(status='Published')
+    
+    # context = {
+    #     'posts': posts,
+    #     'keyword': keyword
+    # }
+    return render(request, 'search.html')
